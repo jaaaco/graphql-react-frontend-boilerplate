@@ -1,19 +1,35 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Divider, Header, Icon, Segment, Table } from 'semantic-ui-react'
 import URLS from '../../urls'
+import { useQuery } from '@apollo/client'
+import { loader } from 'graphql.macro'
+import AppointmentCreate from './create'
+const QUERY = loader('./list.graphql')
 
 const AppointmentList = () => {
-  const appointments = []
+  const { loading, error, data, refetch } = useQuery(QUERY)
+  const [adding, setAdding] = useState(false)
   const history = useHistory()
 
-  if (!appointments.length) {
+  const addingModal = (
+    <>
+      { adding && <AppointmentCreate onComplete={() => {
+        setAdding(false)
+        refetch()
+      }} onCancel={() => setAdding(false)} />}
+    </>
+  )
+
+  if (!data || !data.appointments.length) {
     return (
       <Segment placeholder>
+        { addingModal }
         <Header icon>
           <Icon name="user md" />
           No Appointments yet
           <Divider />
-          <Button onClick={() => history.push(URLS.NEW_APPOINTMENT)} className="mt-5" primary>Create an Appointment</Button>
+          <Button onClick={() => setAdding(true)} className="mt-5" primary>Create an Appointment</Button>
         </Header>
       </Segment>
     )
@@ -21,11 +37,13 @@ const AppointmentList = () => {
 
   return (
     <>
+      { addingModal }
       <Header as="h2">
+        <Button style={{ float: 'right' }} onClick={() => setAdding(!adding)} className="mt-5" primary>Create an Appointment</Button>
         <Icon name="group" />
         <Header.Content>
           Appointments
-          <Header.Subheader>{appointments.length} records</Header.Subheader>
+          <Header.Subheader>{data.appointments.length} records</Header.Subheader>
         </Header.Content>
       </Header>
       <Table padded selectable fixed>
@@ -34,15 +52,17 @@ const AppointmentList = () => {
             <Table.HeaderCell>Start time</Table.HeaderCell>
             <Table.HeaderCell>Duration</Table.HeaderCell>
             <Table.HeaderCell>Description</Table.HeaderCell>
+            <Table.HeaderCell>Receiver</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {appointments.map(
-            ({ _id, description, startTime, duration }) => (
-              <Table.Row onClick={() => {}} key={_id}>
+          {data && data.appointments && data.appointments.map(
+            ({ id, receiver, description, startTime, duration }) => (
+              <Table.Row onClick={() => {}} key={id}>
                 <Table.Cell>{startTime}</Table.Cell>
-                <Table.Cell>{duration}</Table.Cell>
+                <Table.Cell>{duration} min</Table.Cell>
                 <Table.Cell>{description}</Table.Cell>
+                <Table.Cell>{receiver.email}</Table.Cell>
               </Table.Row>
             )
           )}

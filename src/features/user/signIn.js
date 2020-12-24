@@ -3,9 +3,10 @@ import { useMutation } from '@apollo/client'
 import { loader } from 'graphql.macro'
 import { Grid, Form, Button, Icon, Header, Modal } from 'semantic-ui-react'
 
+const MUTATION = loader('./signIn.graphql')
+
 const SignIn = ({ onSignIn, onSignUp }) => {
-  const mutation = loader('./signIn.graphql')
-  const [signInMutation] = useMutation(mutation)
+  const [signInMutation] = useMutation(MUTATION)
   const [fields, setFields] = useState({
     values: {}
   })

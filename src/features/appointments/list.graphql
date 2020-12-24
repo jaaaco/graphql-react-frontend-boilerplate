@@ -1,0 +1,10 @@
+query appointments { appointments {
+  id
+  receiver {
+    email
+  }
+  startTime
+  endTime
+  duration
+  description
+}}

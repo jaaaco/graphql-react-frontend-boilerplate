@@ -2,23 +2,24 @@ import { Button, Form, Grid, Modal } from 'semantic-ui-react'
 import { useState} from 'react'
 import moment from 'moment'
 import { DateTimeInput } from 'semantic-ui-calendar-react'
-import { useHistory } from 'react-router-dom'
-import URLS from '../../urls'
 import { useMutation } from '@apollo/client'
 import { loader } from 'graphql.macro'
+import UserSelect from '../user/select'
 
-const AppointmentCreate = () => {
+const MUTATION = loader('./create.graphql')
+
+const AppointmentCreate = ({ onCancel, onComplete }) => {
   const dateFormat = 'YYYY-MM-DD @ HH:mm'
-  const [appointmentsCreateMutation, { data, loading }] = useMutation(loader('./create.graphql'))
+  const [appointmentsCreateMutation, { data, loading }] = useMutation(MUTATION)
   const [fields, setFields] = useState({
     values: {
+      receiver: null,
       startTime: moment().add(1, 'hour').startOf('hour').format(dateFormat),
       endTime: moment().add(1, 'hour').startOf('hour').add(30, 'minutes').format(dateFormat),
       description: ''
     }
   })
   const [errors, setErrors] = useState({})
-  const history = useHistory()
 
   const handleChange = async (field, value) => {
     setFields(state => ({
@@ -38,17 +39,25 @@ const AppointmentCreate = () => {
   }
 
   const handleSubmit = async () => {
-    await appointmentsCreateMutation({ variables: fields.values })
-    history.push(URLS.APPOINTMENTS)
+    const { data } = await appointmentsCreateMutation({ variables: fields.values, refetchQueries: ['appointments'] })
+    if (data.appointmentCreate.result.success) {
+      onComplete()
+    }
+    setErrors(data.appointmentCreate.errors)
   }
 
   return (
     <Modal open>
       <Modal.Content>
         <Form loading={loading}>
+          <UserSelect error={errors.receiver} selected={[fields.values.receiver]} name="receiver" onChange={(_, { name, value }) => {
+            console.info({ name, value})
+            handleChange(name, `${value}`)
+          }}/>
           <Form.Field>
             <label>Visit start time</label>
             <DateTimeInput
+              error={errors.startTime}
               duration={0}
               name="startTime"
               closable
@@ -64,6 +73,7 @@ const AppointmentCreate = () => {
           <Form.Field>
             <label>Visit end time</label>
             <DateTimeInput
+              error={errors.endTime}
               duration={0}
               name="endTime"
               closable
@@ -77,12 +87,13 @@ const AppointmentCreate = () => {
             />
           </Form.Field>
           <Form.TextArea
+            error={errors.description}
             autoFocus
-            data-cy="description"
-            value={fields.values.interview}
-            label="Inne informacje"
-            placeholder="Inne informacje"
-            onChange={(_, data) => handleChange('interview', `${data.value}`)}
+            name="description"
+            value={fields.values.description}
+            label="Description"
+            placeholder="Description"
+            onChange={(_, { name, value }) => handleChange(name, `${value}`)}
           />
           <Grid>
             <Grid.Row columns="2">
@@ -92,7 +103,7 @@ const AppointmentCreate = () => {
                     Save
                   </Button>
                   <Button.Or text="lub" />
-                  <Button onClick={() => history.push(URLS.APPOINTMENTS)}>
+                  <Button onClick={onCancel}>
                     Cancel
                   </Button>
                 </Button.Group>

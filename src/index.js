@@ -7,13 +7,34 @@ import {
 
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { ApolloClient, createHttpLink, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000',
+});
+
+const authLink = setContext((_, { headers }) => {
+  // get the authentication token from local storage if it exists
+  let user
+  try {
+    user = JSON.parse(window.localStorage.getItem('user'))
+  } catch (e) {
+    return { headers }
+  }
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: user && user.token ? user.token : "",
+    }
+  }
+});
 
 const client = new ApolloClient({
-  uri: 'http://localhost:4000',
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache()
-})
+});
 
 ReactDOM.render(
   <ApolloProvider client={client}>

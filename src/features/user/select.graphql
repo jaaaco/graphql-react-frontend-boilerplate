@@ -1,0 +1,4 @@
+query userSelect { users {
+  id
+  email
+}}

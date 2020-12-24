@@ -8,6 +8,7 @@ schema {
 type Appointment {
   created(format: String = "YYYY-MM-DD @ HH:mm"): String!
   description: String
+  duration(format: String = "minutes"): String
   endTime(format: String = "YYYY-MM-DD @ HH:mm"): String!
   id: ID!
   issuer: User!
