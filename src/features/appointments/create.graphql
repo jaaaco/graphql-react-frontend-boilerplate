@@ -1,0 +1,30 @@
+mutation appointmentCreate (
+  $description: String
+  $receiver: ID!
+  $startTime: String!
+  $endTime: String!
+) {
+  appointmentCreate (
+    description: $description
+    receiver: $receiver
+    startTime: $startTime
+    endTime: $endTime
+) {
+    appointment {
+      status
+      id
+      description
+      startTime
+      endTime
+    }
+    result {
+      success
+      message
+    },
+    errors {
+      startTime
+      endTime
+      receiver
+    }
+  }
+}

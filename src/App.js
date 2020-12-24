@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { withApollo } from '@apollo/client/react/hoc'
 import compose from 'lodash/flowRight'
+import { Segment } from 'semantic-ui-react'
 
 import URLS from './urls'
 import PrivateRoute from './features/PrivateRoute'
@@ -16,14 +17,16 @@ class App extends Component {
     return (
       <>
         { this.user() && <Navigation isAdmin={this.user('ADMIN')} onSignOut={this.signOut}/>}
-        <Switch>
-          <Route path={URLS.SIGN_IN} component={() => {
-            return <SignIn onSignIn={this.signIn} onSignUp={() => this.history.push(URLS.SIGN_UP)} />
-          }} />
-          <PrivateRoute signedIn={this.user()} path={URLS.APPOINTMENTS} component={Appointments}/>
-          <PrivateRoute signedIn={this.user()} path={URLS.USERS} component={UserList}/>
-          <PrivateRoute signedIn={this.user()} path={URLS.HOME} component={Dashboard}/>
-        </Switch>
+        <Segment>
+          <Switch>
+            <Route path={URLS.SIGN_IN} component={() => {
+              return <SignIn onSignIn={this.signIn} onSignUp={() => this.history.push(URLS.SIGN_UP)} />
+            }} />
+            <PrivateRoute signedIn={this.user()} path={URLS.APPOINTMENTS} component={Appointments}/>
+            <PrivateRoute signedIn={this.user()} path={URLS.USERS} component={UserList}/>
+            <PrivateRoute signedIn={this.user()} path={URLS.HOME} component={Dashboard}/>
+          </Switch>
+        </Segment>
       </>
     )
   }
