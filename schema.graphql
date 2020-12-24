@@ -1,0 +1,99 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Appointment {
+  created(format: String = "YYYY-MM-DD @ HH:mm"): String!
+  description: String
+  endTime(format: String = "YYYY-MM-DD @ HH:mm"): String!
+  id: ID!
+  issuer: User!
+  receiver: User!
+  startTime(format: String = "YYYY-MM-DD @ HH:mm"): String!
+  status: AppointmentStatus!
+}
+
+type AppointmentResponse {
+  appointment: Appointment
+  errors: AppointmentResponseErrors
+  result: SimpleResponse
+}
+
+type AppointmentResponseErrors {
+  endTime: String
+  receiver: String
+  startTime: String
+}
+
+type Mutation {
+  appointmentApprove(id: ID!): AppointmentResponse
+  appointmentCreate(
+    description: String,
+    endTime: String,
+    "User ID"
+    receiver: ID!,
+    startTime: String
+  ): AppointmentResponse
+  appointmentReject(id: ID!): AppointmentResponse
+  signIn(email: String!, password: String!): SignInResponse
+  signUp(email: String!, password: String!, passwordConfirmation: String!): SignUpResponse
+}
+
+type Query {
+  appointments: [Appointment]
+  me: User
+  users: [User]
+}
+
+type SignInResponse {
+  result: SimpleResponse
+  token: String
+}
+
+type SignUpResponse {
+  errors: SignUpResponseErrors
+  result: SimpleResponse
+  token: String
+}
+
+type SignUpResponseErrors {
+  email: String
+  password: String
+  passwordConfirmation: String
+}
+
+type SimpleResponse {
+  message: String
+  success: Boolean!
+}
+
+type User {
+  appointments: [Appointment]
+  created(format: String = "YYYY-MM-DD @ HH:mm"): String!
+  email: String!
+  id: ID!
+  role: UserRole!
+}
+
+enum AppointmentStatus {
+  APPROVED
+  CREATED
+  REJECTED
+}
+
+enum CacheControlScope {
+  PRIVATE
+  PUBLIC
+}
+
+enum UserRole {
+  ADMIN
+  STANDARD
+}
+
+
+"The `Upload` scalar type represents a file upload."
+scalar Upload

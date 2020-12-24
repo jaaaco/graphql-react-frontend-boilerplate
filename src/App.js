@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import { Segment } from 'semantic-ui-react'
+import SignIn from './features/user/signIn'
+import Navigation from './features/navigation'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const pages = {
+  signIn: <SignIn/>,
+  appointments: <p>TODO: Appointments here</p>
 }
 
-export default App;
+class App extends Component {
+  state = {
+    activePage: 'appointments',
+    signedIn: false
+  }
+
+  onNavigationChange = (activePage) => {
+    this.setState({ activePage })
+  }
+
+  render () {
+    const { activePage, signedIn} = this.state
+    return (
+      <>
+        <Navigation show={signedIn} activePage={activePage} onChange={this.onNavigationChange}/>
+        <Segment>
+          { !signedIn && <SignIn onSignIn={token => {
+            localStorage.setItem('token', token)
+            this.setState({ signedIn: true })
+          }} /> }
+          { signedIn && pages[activePage]}
+        </Segment>
+      </>
+    )
+  }
+}
+
+export default App
+
