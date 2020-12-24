@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
-import SignIn from './features/user/signIn'
-import Appointments from './features/appointments'
-import Navigation from './features/navigation'
 import { Switch, Route, withRouter } from 'react-router-dom'
 import { withApollo } from '@apollo/client/react/hoc'
 import compose from 'lodash/flowRight'
 
 import URLS from './urls'
 import PrivateRoute from './features/PrivateRoute'
-
-const Dashboard = () => <p>Dashboard HERE</p>
+import Dashboard from './features/dashboard'
+import SignIn from './features/user/signIn'
+import Appointments from './features/appointments'
+import UserList from './features/user/list'
+import Navigation from './features/navigation'
 
 class App extends Component {
   render () {
@@ -20,7 +20,8 @@ class App extends Component {
           <Route path={URLS.SIGN_IN} component={() => {
             return <SignIn onSignIn={this.signIn} onSignUp={() => this.history.push(URLS.SIGN_UP)} />
           }} />
-          <PrivateRoute signedIn={this.user()} path={URLS.HOME} component={Appointments}/>
+          <PrivateRoute signedIn={this.user()} path={URLS.APPOINTMENTS} component={Appointments}/>
+          <PrivateRoute signedIn={this.user()} path={URLS.USERS} component={UserList}/>
           <PrivateRoute signedIn={this.user()} path={URLS.HOME} component={Dashboard}/>
         </Switch>
       </>
@@ -58,7 +59,6 @@ class App extends Component {
       }
       return user.user.role === role
     } catch (e) {
-      console.info(e)
       window.localStorage.removeItem('user')
       return false
     }

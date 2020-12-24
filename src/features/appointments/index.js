@@ -1,5 +1,9 @@
+import { Container, Header } from 'semantic-ui-react'
+
 const Appointments = () => (
-  <p>Appointments</p>
+  <Container>
+    <Header>Appointments</Header>
+  </Container>
 )
 
 export default Appointments
