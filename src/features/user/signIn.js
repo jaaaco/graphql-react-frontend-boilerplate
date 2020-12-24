@@ -19,9 +19,9 @@ const SignIn = ({ onSignIn, onSignUp }) => {
   }
 
   const handleSubmit = async () => {
-    const { data: { signIn: { result, token }}} = await signInMutation({ variables: fields.values })
+    const { data: { signIn: { result, token, user }}} = await signInMutation({ variables: fields.values })
     if (result.success) {
-      return onSignIn(token)
+      return onSignIn({ token, user })
     }
     setMessage(result.message)
   }

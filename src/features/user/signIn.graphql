@@ -5,5 +5,9 @@ mutation signIn ($email: String!, $password: String!) {
             success
             message
         }
+        user {
+          id,
+          role
+        }
     }
 }

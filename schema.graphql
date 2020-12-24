@@ -51,12 +51,14 @@ type Query {
 type SignInResponse {
   result: SimpleResponse
   token: String
+  user: User
 }
 
 type SignUpResponse {
   errors: SignUpResponseErrors
   result: SimpleResponse
   token: String
+  user: User
 }
 
 type SignUpResponseErrors {
