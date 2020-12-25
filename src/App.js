@@ -12,11 +12,13 @@ import Appointments from './features/appointments'
 import UserList from './features/user/list'
 import Navigation from './features/navigation'
 
+const Extra = () => <p>EXTRA</p>
+
 class App extends Component {
   render () {
     return (
       <>
-        { this.user() && <Navigation isAdmin={this.user('ADMIN')} onSignOut={this.signOut}/>}
+        { this.user() && <Navigation isAdmin={this.user('ADMIN')} isExternal={this.user('EXTERNAL')} onSignOut={this.signOut}/>}
         <Segment>
           <Switch>
             <Route path={URLS.SIGN_IN} component={() => {
@@ -24,6 +26,7 @@ class App extends Component {
             }} />
             <PrivateRoute signedIn={this.user()} path={URLS.APPOINTMENTS} component={Appointments}/>
             <PrivateRoute signedIn={this.user()} path={URLS.USERS} component={UserList}/>
+            <PrivateRoute signedIn={this.user()} path={URLS.EXTRA} component={Extra}/>
             <PrivateRoute signedIn={this.user()} path={URLS.HOME} component={Dashboard}/>
           </Switch>
         </Segment>

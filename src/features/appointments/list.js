@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { Button, Divider, Header, Icon, Segment, Table } from 'semantic-ui-react'
+import _ from 'lodash'
+
 import URLS from '../../urls'
 import { useQuery } from '@apollo/client'
 import { loader } from 'graphql.macro'
@@ -58,10 +60,12 @@ const AppointmentList = () => {
         <Table.Body>
           {data && data.appointments && data.appointments.map(
             ({ id, receiver, description, startTime, duration }) => (
-              <Table.Row onClick={() => {}} key={id}>
+              <Table.Row onClick={() => {
+                history.push('/appointments/' + id)
+              }} key={id}>
                 <Table.Cell>{startTime}</Table.Cell>
                 <Table.Cell>{duration} min</Table.Cell>
-                <Table.Cell>{description}</Table.Cell>
+                <Table.Cell>{_.truncate(description, 64)}</Table.Cell>
                 <Table.Cell>{receiver.email}</Table.Cell>
               </Table.Row>
             )

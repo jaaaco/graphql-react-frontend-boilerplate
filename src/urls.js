@@ -3,5 +3,7 @@ export default {
   SIGN_IN: '/sign-in',
   SIGN_UP: '/sign-up',
   APPOINTMENTS: '/appointments',
-  USERS: '/users'
+  APPOINTMENT_DETAILS: '/appointments/:id',
+  USERS: '/users',
+  EXTRA: '/extra-page'
 }

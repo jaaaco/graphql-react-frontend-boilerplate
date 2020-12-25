@@ -40,13 +40,15 @@ type Mutation {
   ): AppointmentResponse
   appointmentReject(id: ID!): AppointmentResponse
   signIn(email: String!, password: String!): SignInResponse
-  signUp(email: String!, password: String!, passwordConfirmation: String!): SignUpResponse
+  signUp(city: String!, email: String!, password: String!, passwordConfirmation: String!): SignUpResponse
+  userCreate(email: String!, password: String!, role: UserRole!): SimpleResponse
 }
 
 type Query {
+  appointment(id: ID!): Appointment
   appointments: [Appointment]
   me: User
-  users: [User]
+  users(city: String): [User]
 }
 
 type SignInResponse {
@@ -63,6 +65,7 @@ type SignUpResponse {
 }
 
 type SignUpResponseErrors {
+  city: String
   email: String
   password: String
   passwordConfirmation: String
@@ -75,6 +78,7 @@ type SimpleResponse {
 
 type User {
   appointments: [Appointment]
+  city: String
   created(format: String = "YYYY-MM-DD @ HH:mm"): String!
   email: String!
   id: ID!
@@ -94,6 +98,8 @@ enum CacheControlScope {
 
 enum UserRole {
   ADMIN
+  EXTERNAL
+  INTERNAL
   STANDARD
 }
 

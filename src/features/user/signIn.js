@@ -20,7 +20,7 @@ const SignIn = ({ onSignIn, onSignUp }) => {
   }
 
   const handleSubmit = async () => {
-    const { data: { signIn: { result, token, user }}} = await signInMutation({ variables: fields.values })
+    const { data: { signIn: { result, token, user } } } = await signInMutation({ variables: fields.values })
     if (result.success) {
       return onSignIn({ token, user })
     }
@@ -39,16 +39,16 @@ const SignIn = ({ onSignIn, onSignUp }) => {
         </Header>
         <Form>
           <Form.Input name="email" onChange={handleChange} focus label="Email"/>
-          <Form.Input error={message} name="password" onChange={handleChange} type="password" label="Password"/>
+          <Form.Input error={message} name="password" onChange={handleChange} type="password" label="Password" />
           <Grid>
             <Grid.Row columns="2">
               <Grid.Column>
                 <Button.Group>
-                  <Button data-cy="appointment-save-button" onClick={handleSubmit} positive>
+                  <Button onClick={handleSubmit} positive>
                     Sign In
                   </Button>
                   <Button.Or text="or" />
-                  <Button data-cy="appointment-cancel">
+                  <Button>
                     Register new account
                   </Button>
                 </Button.Group>

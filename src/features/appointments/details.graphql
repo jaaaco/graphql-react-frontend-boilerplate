@@ -1,0 +1,16 @@
+query appointment ( $id: ID!) {
+  appointment(id: $id) {
+    id
+    startTime
+    endTime
+    description
+    duration
+    receiver {
+      id
+      email
+    }
+    issuer {
+      id
+      email
+    }
+}}

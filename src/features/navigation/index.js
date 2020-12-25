@@ -3,7 +3,7 @@ import { Menu } from 'semantic-ui-react'
 import { useLocation, useHistory } from 'react-router-dom'
 import URLS from '../../urls'
 
-const Navigation = ({ onSignOut, isAdmin }) => {
+const Navigation = ({ onSignOut, isAdmin, isExternal }) => {
   const location = useLocation()
   const history = useHistory()
 
@@ -20,6 +20,11 @@ const Navigation = ({ onSignOut, isAdmin }) => {
       >
         Dashboard
       </Menu.Item>
+      { isExternal && <Menu.Item
+        name={URLS.EXTRA}
+        active={location.pathname === URLS.EXTRA}
+        onClick={navigate}
+      > EXTRA </Menu.Item> }
       <Menu.Item
         name={URLS.APPOINTMENTS}
         active={location.pathname === URLS.APPOINTMENTS}
